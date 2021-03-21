@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+
+title="$1"
+message="$2"
+commit_range="$3"
+icon_path=$(git config monitor.icon || true)
+bin_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[[ -f "$(pwd)/icon.png" ]] && icon_path=$(pwd)/icon.png
+[[ -f "$bin_dir/../images/icon.png" ]] && icon_path=$(cd "$bin_dir/../images"; pwd)/icon.png
+
+function screensaver() {
+  local screensave=
+
+  if [[ $(git config monitor.screensaver-command) ]]; then
+    screensave=$($(git config monitor.screensaver-command))
+  elif [[ $(ps ax | grep "[S]creenSaverEngine" > /dev/null) ]]; then
+    screensave=$(ps ax | grep "[S]creenSaverEngine" > /dev/null)
+  elif [[ $(which gnome-screensaver-command 2>/dev/null) ]]; then
+    screensave=$(LANG=C gnome-screensaver-command -q | grep -q "is active")
+  else
+    screensave="empty"
+  fi
+
+  if [[ "$screensave" != "empty" ]] && [[ $? == 0 ]]; then
+    return 0
+  fi
+
+  return 1
+}
+
+if screensaver; then
+  echo "Screen saver is active, disable desktop notify."
+  exit 0
+fi
+
+if [[ $(git config monitor.desktop-notify-command) ]]; then
+  $($(git config monitor.desktop-notify-command))
+elif [[ $(which notify-send 2>/dev/null) ]]; then
+  $(notify-send -i "$icon_path" "$title" "$message")
+elif [[ $(which terminal-notifier 2>/dev/null) ]]; then
+  $(terminal-notifier -contentImage "$icon_path" -title "$title" -message "$message")
+elif [[ $(which growlnotify 2>/dev/null) ]]; then
+  $(growlnotify --image "$icon_path" -m "$message" "$title")
+elif [[ $(which kdialog 2>/dev/null) ]]; then
+  $(kdialog --icon $icon_path --title "$title" --passivepopup "$message")
+elif [[ $(which notify 2>/dev/null) ]]; then
+  $(notify --type information --icon "$icon_path" --group "Git Commit" --title "$title" "$message")
+else
+  echo "No support for desktop notify"
+fi

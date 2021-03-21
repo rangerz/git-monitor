@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+
+# title's ex:
+#   New commit in $repo_name/$branch
+#   New branch in $repo_name/$branch
+#   New tag in $repo_name/$tag
+title="$1"
+
+# message is output of $(git log $commit_range --pretty=format:'%s (%an)')
+message="$2"
+
+# commit_range's ex: 0f0d73788...7a4a33c54e
+commit_range="$3"
+
