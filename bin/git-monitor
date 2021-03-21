@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -x
+#!/usr/bin/env bash
 # https://github.com/rangerz/git-monitor
 
 set -o errexit
