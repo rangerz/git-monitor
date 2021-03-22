@@ -1,12 +1,12 @@
 # Git Monitor
 
-Monitor Git repositories for new comments, tags, and branches, and then trigger custom commands.
+Monitor Git repositories for new commits, tags, and branches, and then trigger custom commands.
 
 
 
 ## How it works
 
-Use `git fectch` and parse its output for changes for new commits, branches, and tags. When detecting any changes, it will trigger all `*.nofity` scripts with some paramters, such as `$title`, `$message`, and `$comment_range`
+Use `git fectch` and parse its output for changes for new commits, branches, and tags. When detecting any changes, it will trigger all `*.nofity` scripts with some paramters, such as `$title`, `$message`, and `$commit_range`
 
 
 

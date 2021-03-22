@@ -40,7 +40,7 @@ while true; do
     cd "$dir_name" # into monitor git repo folder
 
     # fetch_result's ex:
-    #   new comment: a4ed343b5..86592fa04 master -> origin/master
+    #   new commit: a4ed343b5..86592fa04 master -> origin/master
     #   new branch:  [new branch] dev -> origin/dev
     #   new tag:     [new tag] v1.0 -> v1.0
     fetch_result=$(git fetch 2>&1 | grep -F -- '->' | sed 's/^ [+*=!-] //' || true)
